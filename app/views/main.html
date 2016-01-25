@@ -1,0 +1,36 @@
+
+<div class="row" ng-init="newFeeds()" ng-cloak>
+  <div class="col-md-6 col-md-offset-3">
+        <form class="navbar-form" ng-submit="search()">
+          <div class="form-group" style="display:inline;">
+            <div class="input-group col-md-9">
+              <input class="form-control" type="text" placeholder="search key" ng-model="searchkey">
+             
+            </div>
+             <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+          </div>
+      </form>
+  </div> 
+</div>
+<div class="row">
+  <div class="list-group">
+     
+    <div>
+        <a ng-repeat="news in latestNews" href="{{news.webUrl}}" target="_blank"class="list-group-item" >
+          <img ng-src="{{news.thumbnail}}" alt="thumbnail" class="img-thumbnail">
+          <span class="list-group-item-heading news-heading">{{news.webTitle}}</span>
+       </a>
+
+      <div>
+        <span class="badge news-key">{{news.sectionName}}</span>
+        
+      </div>
+    </div>
+      
+  </div>
+</div>
+<div class="pull-right">
+<!--   <uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination> -->
+{{bigTotalItems}}/{{bigCurrentPage}}
+   <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></uib-pagination>
+</div>

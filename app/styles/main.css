@@ -1,0 +1,11 @@
+.news-heading{
+  padding: 2em;
+  font-size: 20px;
+}
+.news-key{
+   border: 1px solid #f9f6f6;
+   color: #000000;
+   background-color: #ffffff;
+   font-weight: normal;
+
+}
