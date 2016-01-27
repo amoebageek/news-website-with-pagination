@@ -5,10 +5,15 @@ angular.module('myFactory',[])
 	return{
 		get:function(url){
 
-		return $http.get(url);
-						
+			return $http.get(url);
+		
+		},
+		Initiate:function(url){
 
+			return $http.get(url);
+		
 		}
+
 	}
 	
 }]);

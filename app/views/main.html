@@ -1,10 +1,10 @@
 
-<div class="row" ng-init="newFeeds()" ng-cloak>
+<div class="row"  ng-cloak ng-init="newFeeds()">
   <div class="col-md-6 col-md-offset-3">
-        <form class="navbar-form" ng-submit="search()">
+        <form name="searchForm" class="navbar-form" ng-submit="search()" novalidate>
           <div class="form-group" style="display:inline;">
             <div class="input-group col-md-9">
-              <input class="form-control" type="text" placeholder="search key" ng-model="searchkey">
+              <input class="form-control" type="text" placeholder="search key" ng-model="searchkey" required>
              
             </div>
              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
@@ -12,25 +12,29 @@
       </form>
   </div> 
 </div>
-<div class="row">
-  <div class="list-group">
-     
-    <div>
-        <a ng-repeat="news in latestNews" href="{{news.webUrl}}" target="_blank"class="list-group-item" >
-          <img ng-src="{{news.thumbnail}}" alt="thumbnail" class="img-thumbnail">
-          <span class="list-group-item-heading news-heading">{{news.webTitle}}</span>
-       </a>
+<div class="row" ng-if="feed.length >0" style="padding-left: 15px;">{{feed}}</div>
 
-      <div>
-        <span class="badge news-key">{{news.sectionName}}</span>
-        
-      </div>
-    </div>
-      
-  </div>
-</div>
-<div class="pull-right">
-<!--   <uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination> -->
-{{bigTotalItems}}/{{bigCurrentPage}}
-   <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></uib-pagination>
+<ul class="list-group">
+  <li class="list-group-item list-item" ng-repeat="news in latestNews">
+        <a  href="{{news.webUrl}}" target="_blank" class="list-image">
+          <img ng-src="{{news.thumbnail}}" alt="thumbnail" class="img-thumbnail" />
+        </a>
+        <div class="news-heading">
+            <a  href="{{news.webUrl}}" target="_blank" class="list-url">
+                 <span class="list-group-item-heading ">{{news.webTitle}}</span> 
+            </a>
+
+            
+              <p class="news-key"><button class="btn btn-xs btn-info" ng-click="searchByTag(news.sectionName)">{{news.sectionName}}</button></p>
+          
+        </div>
+
+  </li>
+  
+</ul>
+
+
+<div class="pull-right" ng-show="bigTotalItems >0">
+
+   <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged()"></uib-pagination>
 </div>

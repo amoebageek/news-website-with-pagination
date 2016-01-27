@@ -4,19 +4,23 @@ angular.module('myCtrl',[])
 .controller('myCtrl',['$scope','myFact','$log',function($scope,myFact,$log){
 
 	
-	
-   
-	$scope.newFeeds=function(){
-		var baseUrl='http://content.guardianapis.com/search?api-key=test&showfields=thumbnail,headline&page=1&page-size=10';
-			myFact.get(baseUrl)
-					.then(function(re){
-
+	$scope.callApi=function(url){
+		
+		myFact.get(url).then(function(re){
+				$scope.latestNews={};
+				$scope.maxSize = 0;
+                $scope.bigTotalItems =0;
+			    $scope.bigCurrentPage = 0;
+		
 						if(re.data.response.status=='ok'){
-							/*$scope.totalItems =re.data.response.total;
-							$scope.currentPage =re.data.response.currentPage;
-							*/
-						  $scope.maxSize = null;
-						  $scope.bigTotalItems = re.data.response.pages;
+						   if(re.data.response.total==0){
+
+						   		$scope.feed='No News For '+$scope.searchkey;
+						   		document.getElementById('loader').style.display='none';
+						   		return;
+						   }
+						  $scope.maxSize = 5;
+						  $scope.bigTotalItems = re.data.response.total;
 						  $scope.bigCurrentPage = re.data.response.currentPage;
 
 							var latestNews=re.data.response.results;
@@ -24,37 +28,61 @@ angular.module('myCtrl',[])
 							angular.forEach(latestNews,function(k,v){
 								
 								if(! k.hasOwnProperty('thumbnail')){
-									k.thumbnail='/images/yeoman.png'
+									k.thumbnail='images/yeoman.png'
 								}
 							});
 							$scope.latestNews=latestNews;
+							document.getElementById('loader').style.display='none';
 						}
 					});
-		
-
 	}
 	
 	$scope.setPage = function (pageNo) {
-		$scope.currentPage = pageNo;
-	
+		$scope.bigCurrentPage = pageNo;
+		var baseUrl='http://content.guardianapis.com/search?api-key=test&showfields=thumbnail,headline&page='+pageNo+'&page-size=10';
+		$scope.callApi(baseUrl);
 	 }; 
+
 	$scope.pageChanged = function() {
-    $log.log('Page changed to: ' + $scope.currentPage);
+    //$log.log('Page changed to: ' + $scope.bigCurrentPage);
+    var baseUrl='http://content.guardianapis.com/search?api-key=test&showfields=thumbnail,headline&page='+$scope.bigCurrentPage+'&page-size=10';
+		$scope.callApi(baseUrl);
   };
 
 
+//lets start from page=1
+$scope.setPage(1);
+
+		
+
+$scope.feed={};
 	$scope.search=function(){
-	     var searchkey='http://content.guardianapis.com/search?api-key=test&q='+$scope.searchkey+'&showfields=thumbnail,headline&page=1&page-size=10';
-	
-		myFact.get(searchkey)
-			.then(function(re){
+		$scope.latestNews={};
+		$scope.maxSize = 0;
+        $scope.bigTotalItems =0;
+	    $scope.bigCurrentPage = 0;
 
-						if(re.data.response.status=='ok'){
-								
-							$scope.latestNews=re.data.response.results;
-						}
-					})
+		console.log($scope.searchkey);
+		if(typeof $scope.searchkey=='undefined'){
+			$scope.feed='Search Key Missig';
+	   		
+	   		return;
+		}
+		document.getElementById('loader').style.display='block';
+        var url='http://content.guardianapis.com/search?api-key=test&q='+$scope.searchkey+'&showfields=thumbnail,headline&page=1&page-size=10';
+		$scope.feed='Results for '+$scope.searchkey;
+		$scope.callApi(url);
 
-			console.log($scope.searchkey)
+	}
+
+	$scope.searchByTag=function(tag){
+		$scope.latestNews={};
+		$scope.maxSize = 0;
+        $scope.bigTotalItems =0;
+	    $scope.bigCurrentPage = 0;
+	document.getElementById('loader').style.display='block';
+		var url='http://content.guardianapis.com/search?api-key=test&showfields=thumbnail,headline&show-tags='+tag+'&page=1&page-size=10';
+		$scope.feed='Results for '+tag;
+		$scope.callApi(url);
 	}
 }])
